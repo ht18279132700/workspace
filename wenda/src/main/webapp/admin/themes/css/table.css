@@ -1,0 +1,45 @@
+@charset "utf-8";
+
+table.table{
+	margin-top:2px;
+	font-size:14px;
+}
+table.table thead tr th{
+    font-weight: normal;
+    color: #999;
+    background-color: #F5F6FA;
+}
+table.table tr th,table.table tr td{
+	vertical-align: middle;
+	overflow-wrap: break-word;
+}
+table.table tr td a:focus{
+	text-decoration:none;
+}
+table.table tr td a:hover{
+	text-decoration:underline;
+}
+table.table.table-fixed{
+	table-layout: fixed;
+}
+table.table.table-fixed .width155{
+	width:155px;
+}
+table.table-bordered > thead > tr > th{
+	border-bottom: none;
+}
+table.table th,table.table td{
+	text-align: center;
+}
+table.table th.text-center,table.table td.text-center{
+	text-align: center;
+}
+table.table th.text-left,table.table td.text-left{
+	text-align: left;
+}
+table.table th.text-right,table.table td.text-right{
+	text-align: right;
+}
+table.table th input[type='checkbox'],table.table td input[type='checkbox']{
+	vertical-align: top;
+}

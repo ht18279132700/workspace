@@ -1,0 +1,65 @@
+@charset "utf-8";
+.pager {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+.pager .prev {
+    background: url(/admin/themes/green/images/icon_page.png) 10px 9px no-repeat;
+    padding: 0px 10px 0px 24px;
+}
+.pager span {
+    padding: 0px 9px;
+    display: inline-block;
+    line-height: 26px;
+    text-align: center;
+    color: #fff;
+    background: #fa0;
+    margin: 0px 2px;
+    font-size: 12px;
+    border: 1px solid #fa0;
+    font-weight: bold;
+}
+.pager a {
+    font-size: 12px;
+    padding: 0px 9px;
+    display: inline-block;
+    line-height: 26px;
+    text-align: center;
+    color: #333;
+    border: 1px solid #e3e3e3;
+    text-decoration: none;
+    margin: 0 2px;
+}
+.pager a:hover {
+    border: 1px solid #fa0;
+    color: #fa0;
+}
+.pager .iNum {
+	padding: 0px 8px;
+    display: inline-block;
+    line-height: 26px;
+    height: 26px;
+    text-align: center;
+    color: #333;
+    border: 1px solid #e3e3e3;
+    margin: 0 2px;
+    vertical-align: top;
+    font-style: normal;
+}
+.pager .iNum .txt {
+	width: 30px;
+    border-radius: unset;
+	height: 18px;
+    line-height: 18px;
+    padding: 0px 2px;
+    background: url(/admin/themes/green/images/bg_inputStyle.png) top repeat-x;
+    border: 1px solid;
+    border-color: #828280 #e1e1e1 #e1e1e1 #828280;
+    position: relative;
+    margin: -1px 0 0 0;
+}
+.pager .next {
+    background: url(/admin/themes/green/images/icon_page.png) 55px -12px no-repeat;
+    padding: 0px 24px 0px 10px;
+}

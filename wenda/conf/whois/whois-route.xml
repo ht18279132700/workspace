@@ -1,0 +1,96 @@
+<cluster xmlns="http://caucho.com/ns/resin"
+         xmlns:resin="http://caucho.com/ns/resin/core">
+
+	<!--  whois properties!-->
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>Server_Socket_Link</env-entry-name>
+             <env-entry-type>java.lang.String</env-entry-type>
+             <env-entry-value>192.168.75.2</env-entry-value>
+        </env-entry>
+		
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>Server_Socket_Port</env-entry-name>
+             <env-entry-type>java.lang.Integer</env-entry-type>
+             <env-entry-value>6806</env-entry-value>
+        </env-entry>
+		
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>Server_Socket_Timeout_In_Milisecond</env-entry-name>
+             <env-entry-type>java.lang.Integer</env-entry-type>
+             <env-entry-value>3000</env-entry-value>
+        </env-entry>
+		
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>Register_Server_Link</env-entry-name>
+             <env-entry-type>java.lang.String</env-entry-type>
+             <env-entry-value>http://192.168.75.2:9092/publish/registerServer.htm?external=true</env-entry-value>
+        </env-entry>
+		
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>Register_Fail_Retry_Max_Time_In_Minutes</env-entry-name>
+             <env-entry-type>java.lang.Integer</env-entry-type>
+             <env-entry-value>2</env-entry-value>
+        </env-entry>
+		
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>FILE_TRANSFER_SERVER_SOCKET_PORT</env-entry-name>
+             <env-entry-type>java.lang.Integer</env-entry-type>
+             <env-entry-value>6884</env-entry-value>
+        </env-entry>
+		
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>Gen_Message_File_Name</env-entry-name>
+             <env-entry-type>java.lang.String</env-entry-type>
+             <env-entry-value>D:\dev_tool\resin-pro-3.1.8\whois\base_whois_data.xml.zip</env-entry-value>
+        </env-entry>
+		
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>Allow_Host_List</env-entry-name>
+             <env-entry-type>java.lang.String</env-entry-type>
+             <env-entry-value>192.168.75.2</env-entry-value>
+        </env-entry>
+		
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>Is_Use_Proxy</env-entry-name>
+             <env-entry-type>java.lang.String</env-entry-type>
+             <env-entry-value>false</env-entry-value>
+        </env-entry>
+		
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>User_Proxy_Link</env-entry-name>
+             <env-entry-type>java.lang.String</env-entry-type>
+             <env-entry-value>192.168.11.254</env-entry-value>
+        </env-entry>
+		
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>User_Proxy_Port</env-entry-name>
+             <env-entry-type>java.lang.Integer</env-entry-type>
+             <env-entry-value>8080</env-entry-value>
+        </env-entry>
+		
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>User_Proxy_Username</env-entry-name>
+             <env-entry-type>java.lang.String</env-entry-type>
+             <env-entry-value></env-entry-value>
+        </env-entry>
+		
+		<env-entry>
+             <description>whois properties</description>
+             <env-entry-name>User_Proxy_Password</env-entry-name>
+             <env-entry-type>java.lang.String</env-entry-type>
+             <env-entry-value></env-entry-value>
+        </env-entry>
+
+</cluster>

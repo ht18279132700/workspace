@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <bean id="systemConfig" class="cn.com.pcauto.wenda.config.SystemConfig">
+        <property name="root">
+            <value>${sys.root}</value>
+        </property>
+        <property name="oldRoot">
+            <value>${sys.oldRoot}</value>
+        </property>
+        <property name="appName">
+            <value>${sys.appName}</value>
+        </property>
+        <property name="censorDoMain">
+            <value>${sys.censordomain}</value>
+        </property>
+        <property name="censorType">
+            <value>${sys.censorType}</value>
+        </property>
+        <property name="ucRoot">
+            <value>${sys.ucroot}</value>
+        </property>
+        <property name="upcRoot">
+            <value>${sys.upcroot}</value>
+        </property>
+        <property name="cmtRoot">
+            <value>${sys.cmtroot}</value>
+        </property>
+        <property name="msgFeedUrl">
+            <value>${sys.msgFeedUrl}</value>
+        </property>
+        <property name="userSessionName">
+            <value>${sys.userSessionName}</value>
+        </property>
+        <property name="proxyHost">
+            <value>${sys.proxy.host}</value>
+        </property>
+        <property name="proxyPort">
+            <value>${sys.proxy.port}</value>
+        </property>
+        
+        <property name="wapRoot">
+            <value>${sys.wap.root}</value>
+        </property>
+        <property name="wapUcRoot">
+            <value>${sys.wap.ucroot}</value>
+        </property>
+        <property name="passportUrl">
+            <value>${sys.passportUrl}</value>
+        </property>
+        <property name="priceRoot">
+            <value>${sys.priceroot}</value>
+        </property>
+        <property name="ksRoot">
+            <value>${sys.ksroot}</value>
+        </property>
+        <property name="uploadvideoRoot">
+            <value>${sys.uploadvideoroot}</value>
+        </property>
+        <property name="forbid">
+            <value>${sys.forbid}</value>
+        </property>
+    </bean>
+</beans>

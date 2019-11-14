@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: net.sourceforge.retroweaver:retroweaver:1.0fcs">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/retroweaver/retroweaver/1.0fcs/retroweaver-1.0fcs.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/retroweaver/retroweaver/1.0fcs/retroweaver-1.0fcs-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/sourceforge/retroweaver/retroweaver/1.0fcs/retroweaver-1.0fcs-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

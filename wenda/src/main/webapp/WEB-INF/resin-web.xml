@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://caucho.com/ns/resin">
+
+    <rewrite-dispatch xmlns="http://caucho.com/ns/resin">
+    	 <!-- PC版示例 -->
+    	 <!-- 首页 -->
+         <forward regexp="^/$" target="/question/index.do"/>
+         <forward regexp="^/list-(\d+).html$" target="/question/index.do?pageNo=$1"/>
+         <!-- 话题标签页 -->
+         <forward regexp="^/topic/(\d+).html$" target="/tagQuestion/topic.do?tid=$1"/>
+         <forward regexp="^/topic/(\d+)-(\d+).html$" target="/tagQuestion/topic.do?tid=$1&amp;pageNo=$2"/>
+         <!-- 详情页 -->
+         <forward regexp="^/(\d+).html$" target="/question/detail.do?qid=$1"/>
+         <forward regexp="^/(\d+)-(\d+).html$" target="/question/detail.do?qid=$1&amp;pageNo=$2"/>
+         <!-- 搜索页 -->
+         <forward regexp="^/search/(.*)&amp;pageNo=(\d+)/?" target="/question/search.do?keywords=$1&amp;pageNo=$2"></forward>
+         <forward regexp="^/search/(.*)/$" target="/question/search.do?keywords=$1"></forward>
+         <!-- 标签页 -->
+         <forward regexp="^/topic/$" target="/tag/index.do"></forward>
+         <forward regexp="^/topic/([A-Z]).html$" target="/tag/sort.do?letter=$1"></forward>
+         <forward regexp="^/topic/([A-Z])-(\d+).html$" target="/tag/sort.do?letter=$1&amp;pageNo=$2"></forward>
+         
+		 <!-- WAP版统一以/m/开头 -->
+    	 <!-- 首页 -->
+         <forward regexp="^/m/$" target="/m/question/index.do"/>
+         <!-- 话题标签页 -->
+         <forward regexp="^/m/topic/(\d+).html$" target="/m/tagQuestion/topic.do?tid=$1"/>
+         <!-- 详情页 -->
+         <forward regexp="^/m/(\d+).html$" target="/m/question/detail.do?qid=$1"/>
+         <!-- 搜索页 -->
+         <forward regexp="^/m/search/(.*)$" target="/m/question/search.do?keywords=$1"></forward>
+         
+	</rewrite-dispatch>
+</web-app>

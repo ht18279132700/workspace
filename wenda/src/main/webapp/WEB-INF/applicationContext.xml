@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd          
+          http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <bean class="org.gelivable.web.AopSqlMonitor"/>
+
+    <!-- Properties Config -->
+    <jee:jndi-lookup id="props" jndi-name="java:comp/env/props"/>
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:#{props}</value>
+                <value>classpath:properties/*.properties</value>
+                <value>file:/data/pc-config/passport.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound"  value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="valueSeparator"  value=":=" />
+    </bean>
+    
+
+    
+    <!-- MC Config -->
+    <bean id="mccSocketIOPool" class="com.danga.MemCached.SockIOPool"
+          factory-method="getInstance"
+          init-method="initialize"
+          destroy-method="shutDown"
+          p:servers="${memcached.servers}"
+          p:maxConn="${memcached.maxConn}"
+          p:initConn="${memcached.initConn}"
+          p:socketConnectTO="${memcached.socketConnectTO}"
+          p:socketTO="${memcached.socketTO}"
+          p:maintSleep="${memcached.maintSleep}"
+          p:failover="${memcached.failover}"
+          p:failback="${memcached.failback}"
+          p:nagle="${memcached.nagle}" >
+        <constructor-arg value="wenda"/>
+    </bean>
+	
+    <!-- Injecting MCClient -->
+    <bean id="mcc" class="com.danga.MemCached.MemCachedClient" p:sanitizeKeys="false" >
+        <constructor-arg value="wenda"/>
+    </bean>
+	
+	<bean id="ormGetObjectIdAspect" class="cn.com.pcauto.wenda.util.OrmGetObjectIdAspect"/>
+	
+    <!-- Database Config  -->                 
+    <jee:jndi-lookup id="dataSource" jndi-name="jdbc/wenda"/>
+    <jee:jndi-lookup id="idGenDataSource" jndi-name="jdbc/wenda"/>
+
+    <!-- Transaction Config  --> 
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          p:dataSource-ref="dataSource"/>    
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" propagation="NOT_SUPPORTED" read-only="true" />
+            <tx:method name="find*" propagation="NOT_SUPPORTED" read-only="true" />
+            <tx:method name="load*" propagation="NOT_SUPPORTED" read-only="true" />
+            <tx:method name="search*" propagation="NOT_SUPPORTED" read-only="true" />
+            <tx:method name="query*" propagation="NOT_SUPPORTED" read-only="true" />
+            <tx:method name="retrive*" propagation="NOT_SUPPORTED" read-only="true" />
+            <tx:method name="list*" propagation="NOT_SUPPORTED" read-only="true" />
+            <tx:method name="page*" propagation="NOT_SUPPORTED" read-only="true" />
+            <tx:method name="*" propagation="REQUIRED" />
+        </tx:attributes>
+    </tx:advice>
+    <aop:config>
+        <aop:advisor pointcut="within(cn.com.pcauto.wenda.service..*)" advice-ref="txAdvice"/>
+        <aop:advisor pointcut="within(org.gelivable.log.GeliLogFacade..*)" advice-ref="txAdvice"/>
+        <aop:advisor pointcut="within(org.gelivable.dao.GeliDao..*)" advice-ref="txAdvice"/>
+        <aop:advisor pointcut="within(org.springframework.jdbc.core.JdbcTemplate..*)" advice-ref="txAdvice"/>
+        <aop:aspect ref="ormGetObjectIdAspect">
+	        <aop:pointcut expression="execution(* org.gelivable.dao.GeliOrm.getObjectId(..))" id="getObjectId"/>
+	        <aop:around method="around" pointcut-ref="getObjectId"/>
+        </aop:aspect>
+    </aop:config>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" p:dataSource-ref="dataSource"/>
+    <bean id="idGenerator" class="org.gelivable.dao.IdGeneratorByTable" p:idDataSource-ref="idGenDataSource"/>
+    
+    <!-- Authorization Config -->
+    <bean class="org.gelivable.auth.GeliAuthFacade" 
+          id="authFacade" 
+          p:authUri="${sys.authUri}" 
+          p:authServer="${sys.authServer}" 
+          p:application="${sys.appName}"/>
+    <bean class="org.gelivable.auth.GeliDefaultResourceProvider"/>
+    
+    <!-- RClient config -->
+    <jee:jndi-lookup id="route" jndi-name="jca/pc_route" />
+    <jee:jndi-lookup id="memCachedClientConfig4RClient" jndi-name="java:comp/env/memCachedClientConfig4RClient" />
+    <bean id="memCachedClient4RClientFactory" class="cn.pconline.r.util.MemCachedClientFactory"
+          p:config-ref="memCachedClientConfig4RClient" p:poolName="rclient"
+          init-method="init" destroy-method="shutdown" />
+    <bean id="memCachedClient4RClient" factory-bean="memCachedClient4RClientFactory"
+          factory-method="getInstance" />
+    <bean id="rClient" class="cn.pconline.r.client.RClient"
+          p:route-ref="route" p:memCachedClient-ref="memCachedClient4RClient"
+          init-method="init" destroy-method="shutdown" />
+    <bean id="simpleHttpTemplate" class="cn.pconline.r.client.SimpleHttpTemplate"
+          p:route-ref="route" p:connectTimeout="20000" p:readTimeout="20000"
+          p:clientUri=""
+          init-method="init" destroy-method="shutdown" />        
+    
+    
+    <!-- Geli2.0 Config -->
+    <bean id="geliOrm" class="org.gelivable.dao.GeliOrm">
+        <property name="entityPackageList">
+            <list>
+                <value>cn.com.pcauto.wenda.entity</value>
+                <value>org.gelivable.auth.entity</value>
+                <value>org.gelivable.log.entity</value>
+            </list>
+        </property>
+    </bean>    
+    
+    <!-- Application Config -->    
+    <bean id="sqlPageBuilder4MySQL" class="org.gelivable.dao.SqlPageBuilder4MySQL"/>
+    <bean id="cacheProvider" class="org.gelivable.web.EnvCacheProvider"/>
+    <bean id="memCachedProvider" class="org.gelivable.web.MemCachedProvider"
+          p:memCachedClient-ref="mcc"/>
+    <bean id="geliDao" class="org.gelivable.dao.GeliDao"
+          p:sqlPageBuilder-ref="sqlPageBuilder4MySQL"
+          p:jdbcTemplate-ref="jdbcTemplate"
+          p:idGenerator-ref="idGenerator"
+          p:cacheSecondLevel-ref="memCachedProvider"
+          p:orm-ref="geliOrm"/>
+    <bean class="org.gelivable.dao.GeliUtils" p:dao-ref="geliDao" p:orm-ref="geliOrm"/>
+    <bean class="org.gelivable.dao.Select">
+    	<property name="data">
+    		<map>
+    			<entry key="tagStatus">
+    				<map>
+    					<entry key="-1" value="停用"/>
+    					<entry key="0" value="启用"/>
+    				</map>
+    			</entry>
+    		</map>
+    	</property>
+    </bean>
+
+    <!-- Components Scanner -->
+    <context:component-scan base-package="cn.com.pcauto.wenda.service">
+        <context:include-filter type="regex" expression=".*" />
+    </context:component-scan>
+    
+    <bean id="jsonClient" class="cn.pc.util.JsonClient">
+        <property name="directToBIP" value="false" />
+    </bean>
+	
+	<bean id="timeUnit" class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+       <property name="staticField" value="java.util.concurrent.TimeUnit.MINUTES" />
+    </bean>
+    
+    <bean id="synchronousQueue" class="java.util.concurrent.SynchronousQueue">
+    	<constructor-arg index="0" value="true"/>
+    </bean>
+    
+    <bean id="censorQueue" class="java.util.concurrent.ArrayBlockingQueue">
+    	<constructor-arg index="0" value="100000"/>
+    	<constructor-arg index="1" value="true"/>
+    </bean>
+    
+    <bean id="pvQueue" class="java.util.concurrent.ArrayBlockingQueue">
+    	<constructor-arg index="0" value="300000"/>
+    	<constructor-arg index="1" value="true"/>
+    </bean>
+    
+    <bean id="abortPolicy" class="java.util.concurrent.ThreadPoolExecutor.AbortPolicy"/>
+    <bean id="discardPolicy" class="java.util.concurrent.ThreadPoolExecutor.DiscardPolicy"/>
+	
+	<bean id="importThreadPool" class="java.util.concurrent.ThreadPoolExecutor" destroy-method="shutdown">
+		<constructor-arg index="0" value="1"/>
+		<constructor-arg index="1" value="1"/>
+		<constructor-arg index="2" value="0"/>
+		<constructor-arg index="3" ref="timeUnit"/>
+		<constructor-arg index="4" ref="synchronousQueue"/>
+		<constructor-arg index="5" ref="abortPolicy"/>
+	</bean>
+	    
+	<bean id="pvThreadPool" class="java.util.concurrent.ThreadPoolExecutor" destroy-method="shutdown">
+		<constructor-arg index="0" value="1"/>
+		<constructor-arg index="1" value="1"/>
+		<constructor-arg index="2" value="0"/>
+		<constructor-arg index="3" ref="timeUnit"/>
+		<constructor-arg index="4" ref="pvQueue"/>
+		<constructor-arg index="5" ref="discardPolicy"/>
+	</bean>
+	
+	<bean id="censorThreadPool" class="java.util.concurrent.ThreadPoolExecutor" destroy-method="shutdown">
+		<constructor-arg index="0" value="10"/>
+		<constructor-arg index="1" value="20"/>
+		<constructor-arg index="2" value="1"/>
+		<constructor-arg index="3" ref="timeUnit"/>
+		<constructor-arg index="4" ref="censorQueue"/>
+		<constructor-arg index="5" ref="abortPolicy"/>
+	</bean>
+	  
+	    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+p:maxUploadSize="67108864" p:maxInMemorySize="1048576" />
+    <import resource="wenda-passport.xml" />
+    <import resource="wenda-servlet.xml" />
+    <import resource="wenda-systemConfig.xml" />
+    <import resource="wenda-rabbitmq.xml" />
+</beans>

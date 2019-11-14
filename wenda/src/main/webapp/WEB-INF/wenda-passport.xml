@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd          
+          http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- 设置应用编码，每个应用区别的表示，通常在web.xml中设置 -->
+    <jee:jndi-lookup id="application" jndi-name="java:comp/env/app-name"/>
+
+    <!-- 对于公共应用，可以在应用服务器中配置应用编码，覆盖web.xml中的配置 -->
+    <jee:jndi-lookup id="appOverride" jndi-name="java:comp/env/app-name-override" default-value="null"/>
+    
+
+    <!-- 通行证主导模块配置 -->
+	<bean id="httpClient" class="org.apache.commons.httpclient.HttpClient" />
+	<bean id="passportJsonClient" 
+	class="cn.pconline.passport3.client.JsonClient"  
+	p:httpClient-ref="httpClient"
+	p:passportRoot="${sys.passportUrl}" 
+    p:recognizeRoot="${sys.recognizeRoot}"
+	p:simpleHttpTemplate-ref="simpleHttpTemplate"/>
+    
+    <bean id="passport" class="cn.pconline.passport3.client.Passport"
+      p:jsonClient-ref="passportJsonClient"
+      p:application-ref="application"
+      p:sessionCookieName="${passport.cookie.session}"
+      p:userCookieName="${passport.cookie.user}"/>
+      
+    <!-- 验证码的 Memcached 客户端资源池配置 , Captcha专用-->
+	<bean id="sockIOPool4Captcha" class="com.danga.MemCached.SockIOPool"
+    	factory-method="getInstance" init-method="initialize" destroy-method="shutDown"
+    	p:initConn="${captcha.memcached.initConn}"
+    	p:minConn="${captcha.memcached.minConn}"
+    	p:maxConn="${captcha.memcached.maxConn}"
+    	p:maintSleep="${captcha.memcached.maintSleep}"
+    	p:nagle="${captcha.memcached.nagle}"
+    	p:hashingAlg="2"
+    	p:socketTO="${captcha.memcached.socketTO}"
+    	p:servers="${captcha.memcached.servers}">
+    	<constructor-arg value="captcha"/>
+    </bean>
+    
+    <!-- 验证码的 Memcached 客户端配置, 验证码专用-->
+	<bean id="memCachedClient4Captcha" class="com.danga.MemCached.MemCachedClient">
+		<property name="sanitizeKeys" value="false"/>
+		<constructor-arg value="captcha"/>
+	</bean>
+
+	<!-- 验证码系统的客户端配置，用于保护帐号不被暴力破解 -->
+	<bean id="captchaClient" class="cn.pconline.captcha.client.CaptchaClient"
+	    p:memCacheClient-ref="memCachedClient4Captcha"
+		p:passAll="${captcha.client.passAll}"/>
+</beans>

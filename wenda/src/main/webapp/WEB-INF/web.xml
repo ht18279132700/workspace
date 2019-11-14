@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <display-name>wenda</display-name>
+
+    <env-entry>
+        <env-entry-name>app-name</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>pcauto_wd</env-entry-value>
+    </env-entry>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+	<filter>
+	  <filter-name>CharacterEncodingFilter</filter-name>
+	  <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+	  <init-param>
+	    <param-name>encoding</param-name>
+	    <param-value>UTF-8</param-value>
+	  </init-param>
+	</filter>
+	<filter-mapping>
+	  <filter-name>CharacterEncodingFilter</filter-name>
+	  <url-pattern>*.do</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+	  <filter-name>monitor</filter-name>
+	  <filter-class>cn.com.pcauto.wenda.util.monitor.MonitorFilter</filter-class>
+	  <init-param>
+	    <param-name>require-agent</param-name>
+	    <param-value>true</param-value>
+	  </init-param>
+	</filter>
+	<filter-mapping>
+	  <filter-name>monitor</filter-name>
+	  <url-pattern>*.do</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+	  <filter-name>monitor</filter-name>
+	  <url-pattern>/*.jsp</url-pattern>
+	</filter-mapping>
+  
+    <filter>
+        <filter-name>gzip</filter-name>
+        <filter-class>org.gelivable.web.gzip.GZIPFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>gzip</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>EnvFilter</filter-name>
+        <filter-class>org.gelivable.web.EnvFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>EnvFilter</filter-name>
+        <url-pattern>*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>cn.com.pcauto.wenda.filter.AuthFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+    </filter-mapping>
+    <servlet>
+        <servlet-name>wenda</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>wenda</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+     <error-page>
+        <error-code>404</error-code>
+        <location>/error/notFoundPage.jsp</location>
+     </error-page>
+</web-app>

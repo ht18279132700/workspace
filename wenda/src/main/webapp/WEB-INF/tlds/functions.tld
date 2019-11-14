@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>functions</short-name>
+    <uri>/WEB-INF/tlds/functions</uri>
+
+    <function>
+        <name>removeHttp</name>
+        <function-class>cn.com.pcauto.wenda.util.WebUtils</function-class>
+        <function-signature>java.lang.String removeHttp(java.lang.String)</function-signature>
+    </function>
+    <function>
+        <name>addHttp</name>
+        <function-class>cn.com.pcauto.wenda.util.WebUtils</function-class>
+        <function-signature>java.lang.String addHttp(java.lang.String)</function-signature>
+    </function>
+    <function>
+        <name>htmlUrl</name>
+        <function-class>cn.com.pcauto.wenda.util.Functions</function-class>
+        <function-signature>java.lang.String htmlUrl(java.lang.String, int)
+        </function-signature>
+    </function>
+    <function>
+        <name>getUserIcon</name>
+        <function-class>cn.com.pcauto.wenda.util.Functions</function-class>
+        <function-signature>java.lang.String getUserIcon(long, int)
+        </function-signature>
+    </function>
+    <function>
+        <name>getImgSize</name>
+        <function-class>cn.com.pcauto.wenda.util.Functions</function-class>
+        <function-signature>java.lang.String getImgSize(java.lang.String, java.lang.String)
+        </function-signature>
+    </function>
+    <function>
+        <name>joinDay</name>
+        <function-class>cn.com.pcauto.wenda.util.Functions</function-class>
+        <function-signature>java.lang.String joinDay(long, java.lang.String)
+        </function-signature>
+    </function>
+</taglib>

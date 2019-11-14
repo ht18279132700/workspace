@@ -1,0 +1,94 @@
+<resin xmlns="http://caucho.com/ns/resin" xmlns:resin="http://caucho.com/ns/resin/core">
+	<log name="" level="info" path="stdout:" />
+	<cluster id="app-tier">
+		<server id="" port="6801">
+			<http port="12380" />
+			<jvm-arg>-Xmx256m</jvm-arg>
+			<jvm-arg>-Xss1m</jvm-arg>
+			<jvm-arg>-Xdebug</jvm-arg>
+			<jvm-arg>-Dcom.sun.management.jmxremote</jvm-arg>
+			<jvm-arg>-XX:MaxPermSize=256m</jvm-arg>
+			<jvm-arg>-Xnoagent</jvm-arg>
+			<jvm-arg>-Djava.compiler=NONE</jvm-arg>
+			<jvm-arg>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=11122
+			</jvm-arg>
+			<thread-max>256</thread-max>
+			<thread-idle-min>100</thread-idle-min>
+      			<thread-idle-max>150</thread-idle-max>
+		</server>
+    <resin:if test="${isResinProfessional}">
+      <cache path="cache" memory-size="64M"  enable="false">
+        <rewrite-vary-as-private/>
+      </cache>
+    </resin:if>		
+		<resin:import path="${resin.home}/conf/app-default.xml" />
+      <access-log path="logs/access.log" 
+            format='%h %H %D %T "%r" %s %b "%{Referer}i" "%{User-Agent}i"'
+            rollover-period="1W"/>		
+		
+		<host id="" root-directory=".">
+			<web-app id="/" document-directory="F:\git\company\auto_wenda\wenda\target\wenda" />
+			<web-app id="/" root-directory="F:\git\company\auto_wenda\wenda\src\main\webapp"> <!-- configurate web directory -->
+			 	<prologue>
+				  <class-loader>
+				    <compiling-loader path="F:\git\company\auto_wenda\wenda\target\wenda\WEB-INF\classes"/> 
+				    <library-loader path="F:\git\company\auto_wenda\wenda\target\wenda\WEB-INF\lib"/>  
+				  </class-loader>
+				</prologue>
+     		 </web-app>
+     	</host>
+     	
+                <database jndi-name='jdbc/wenda'>
+                      <driver type="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
+<!--                       <url>jdbc:mysql://192.168.74.94:3306/wenda?useUnicode=true&amp;characterEncoding=UTF-8</url> -->
+                      <url>jdbc:mysql://192.168.74.99:3307/pcauto_wenda?useUnicode=true&amp;characterEncoding=utf8</url>
+                      <user>pcauto_wenda</user>
+                      <password>pcauto_wenda</password>
+                      </driver>
+                      <prepared-statement-cache-size>5</prepared-statement-cache-size>
+                      <max-connections>50</max-connections>
+                      <max-idle-time>10s</max-idle-time>
+                </database>
+		<env-entry>
+			<description>System Properties Location</description>
+			<env-entry-name>props</env-entry-name>
+			<env-entry-type>java.lang.String</env-entry-type>
+			<env-entry-value>F:\git\company\auto_wenda\wenda\conf\wenda.properties</env-entry-value>
+		</env-entry>
+		<env-entry>
+			<description>unique application code</description>
+			<env-entry-name>app-name</env-entry-name>
+			<env-entry-type>java.lang.String</env-entry-type>
+			<env-entry-value>pcauto_wd</env-entry-value>
+       </env-entry>
+		<env-entry>
+        <description>MemCahcedClient config for RClient</description>
+        <env-entry-name>memCachedClientConfig4RClient</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>
+            servers=192.168.74.54:11220,192.168.74.55:11220    
+            initConn=20
+            minConn=10
+            maxConn=50
+            maintSleep=30
+            nagle=false
+            socketTO=3000
+        </env-entry-value>
+      </env-entry>
+
+      <env-entry>
+        <description>Internal inetnums</description>
+        <env-entry-name>internalInetnums</env-entry-name>
+        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-value>192.168.20.0/22,192.168.23.0/24</env-entry-value>
+      </env-entry>
+
+      <resource jndi-name="jca/pc_route" type="cn.pconline.r.route.PcRouteJNDI" >
+        <init>
+            <routeUri>http://192.168.74.5/pc_route/route.txt</routeUri>
+            <dnsAddr>192.168.11.228</dnsAddr>
+        </init>
+      </resource>
+      <resin:import path="F:\git\company\auto_wenda\wenda\conf\whois\whois-route.xml"/>
+	</cluster>
+</resin>
